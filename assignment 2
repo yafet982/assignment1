@@ -1,0 +1,166 @@
+using System;
+
+class TicTacToe
+{
+    static char[] board = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+    static int player = 1; // By default, player 1 starts
+    static int choice; // User choice for position on the board
+    static int turns = 0; // Number of turns played
+    static int player1Score = 0;
+    static int player2Score = 0;
+
+    static string authorInfo = @"
+Firstname Lastname
+St. Street Name 0/0
+Zip-Code City
+...
+";
+
+    static void Main()
+    {
+        do
+        {
+            Console.Clear();
+            Console.WriteLine("1. New game");
+            Console.WriteLine("2. About the author");
+            Console.WriteLine("3. Exit");
+            Console.Write("> ");
+            string menuChoice = Console.ReadLine();
+
+            switch (menuChoice)
+            {
+                case "1":
+                    PlayGame();
+                    break;
+                case "2":
+                    DisplayAuthorInfo();
+                    break;
+                case "3":
+                    Console.WriteLine("Are you sure you want to quit? [y/n]");
+                    if (Console.ReadLine().ToLower() == "y")
+                    {
+                        Environment.Exit(0);
+                    }
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice. Please try again.");
+                    break;
+            }
+        } while (true);
+    }
+
+    static void PlayGame()
+    {
+        turns = 0;
+        player = 1;
+        Array.Fill(board, ' '); // Clear the board
+
+        do
+        {
+            Console.Clear();
+            Console.WriteLine($"Player 1 (X) Score: {player1Score} | Player 2 (O) Score: {player2Score}");
+            Console.WriteLine("\n");
+
+            if (player % 2 == 0)
+            {
+                Console.WriteLine("Turn Player 2 (O)");
+            }
+            else
+            {
+                Console.WriteLine("Turn Player 1 (X)");
+            }
+            Console.WriteLine("\n");
+
+            DisplayBoard();
+
+            // Check for valid input
+            bool validInput = false;
+            while (!validInput)
+            {
+                Console.Write((player % 2 == 0) ? "O" : "X");
+                Console.Write("'s move > ");
+
+                // Ensure the input is an integer
+                if (int.TryParse(Console.ReadLine(), out choice))
+                {
+                    // Ensure the chosen position is available
+                    if (choice > 0 && choice < 10 && board[choice - 1] == ' ')
+                    {
+                        validInput = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid move. Please try again.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Please enter a number between 1 and 9.");
+                }
+            }
+
+            // Mark the board based on the current player
+            board[choice - 1] = (player % 2 == 0) ? 'O' : 'X';
+
+            turns++;
+
+            // Check for a winner or a tie
+            if (CheckForWinner())
+            {
+                Console.Clear();
+                DisplayBoard();
+                Console.WriteLine($"Player {(player % 2 == 0 ? 'O' : 'X')} won!");
+                UpdateScore();
+                Console.WriteLine("[Press Enter to return to main menu...]");
+                Console.ReadLine();
+                break;
+            }
+            else if (turns == 9)
+            {
+                Console.Clear();
+                DisplayBoard();
+                Console.WriteLine("It's a tie!");
+                Console.WriteLine("[Press Enter to return to main menu...]");
+                Console.ReadLine();
+                break;
+            }
+
+            player = (player % 2 == 0) ? 1 : 2;
+
+        } while (true);
+    }
+
+    static void DisplayBoard()
+    {
+        Console.WriteLine($" {board[0]} | {board[1]} | {board[2]} ");
+        Console.WriteLine("---+---+---");
+        Console.WriteLine($" {board[3]} | {board[4]} | {board[5]} ");
+        Console.WriteLine("---+---+---");
+        Console.WriteLine($" {board[6]} | {board[7]} | {board[8]} ");
+    }
+
+    static void UpdateScore()
+    {
+        if (player % 2 == 0)
+        {
+            player2Score++;
+        }
+        else
+        {
+            player1Score++;
+        }
+    }
+
+    static void DisplayAuthorInfo()
+    {
+        Console.Clear();
+        Console.WriteLine(authorInfo);
+        Console.WriteLine("[Press Enter to return to main menu...]");
+        Console.ReadLine();
+    }
+
+    static bool CheckForWinner()
+    {
+        // (The same as before...)
+    }
+}
