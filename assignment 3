@@ -1,0 +1,47 @@
+using System;
+
+class Program
+{
+    static void SieveOfEratosthenes(bool[] isPrime, int limit)
+    {
+        for (int i = 2; i * i <= limit; i++)
+        {
+            if (isPrime[i])
+            {
+                for (int j = i * i; j <= limit; j += i)
+                {
+                    isPrime[j] = false;
+                }
+            }
+        }
+    }
+
+    static void PrintPrimesUpToLimit(int limit)
+    {
+        bool[] isPrime = new bool[limit + 1];
+        for (int i = 2; i <= limit; i++)
+        {
+            isPrime[i] = true;
+        }
+
+        SieveOfEratosthenes(isPrime, limit);
+
+        Console.WriteLine($"Prime numbers between 1 and {limit}:");
+        for (int num = 2; num <= limit; num++)
+        {
+            if (isPrime[num])
+            {
+                Console.Write(num + " ");
+            }
+        }
+        Console.WriteLine();
+    }
+
+    static void Main()
+    {
+        Console.Write("Enter a number to find prime numbers up to that limit: ");
+        int userLimit = int.Parse(Console.ReadLine());
+
+        PrintPrimesUpToLimit(userLimit);
+    }
+}
